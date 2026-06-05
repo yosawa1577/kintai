@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>勤怠打刻</title>
+</head>
+
+<body>
+
+<h2>イベント勤怠システム</h2>
+
+<input id="name" placeholder="氏名">
+
+<br><br>
+
+<input id="event" placeholder="イベント名">
+
+<br><br>
+
+<button onclick="punch('出勤')">出勤</button>
+<button onclick="punch('休憩開始')">休憩開始</button>
+<button onclick="punch('休憩終了')">休憩終了</button>
+<button onclick="punch('退勤')">退勤</button>
+
+<p id="status"></p>
+
+<script>
+
+const API_URL = "https://script.google.com/macros/s/AKfycbx3-ooDbwqRGj_FX-YYqoc3OopeYlKDNc9AGKfJKAcKdblpUK_8_V5vT9Jhg4xBNJg/";
+
+function punch(type){
+
+navigator.geolocation.getCurrentPosition(function(position){
+
+const data = {
+name: document.getElementById("name").value,
+event: document.getElementById("event").value,
+type: type,
+lat: position.coords.latitude,
+lng: position.coords.longitude
+};
+
+fetch(API_URL,{
+method:"POST",
+body:JSON.stringify(data)
+})
+.then(res=>res.text())
+.then(res=>{
+document.getElementById("status").innerHTML =
+type + "打刻完了";
+});
+
+});
+
+}
+
+</script>
+
+</body>
+</html>
